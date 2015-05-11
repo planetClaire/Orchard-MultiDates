@@ -1,0 +1,12 @@
+﻿Name: MultiDates
+AntiForgery: enabled
+Author: Zeta Tech
+Website: http://zeta.com.au
+Version: 1.0
+OrchardVersion: 1.0
+Description: A Date field that allows ranges & multiple dates
+Features:
+	MultiDates:
+		Description: A Date field that allows ranges & multiple dates
+		Category: Fields
+		Dependencies: Orchard.Fields, Orchard.jQuery

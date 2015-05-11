@@ -1,0 +1,16 @@
+﻿<Placement>
+  <Place Fields_MultiDate_Edit="Content:2.5"/>
+  <Place Fields_MultiDate="Content:after"/>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_MultiDate="Content"/>
+  </Match>
+
+  <Place Fields_DateRange_Edit="Content:2.5"/>
+  <Place Fields_DateRange="Content:after"/>
+
+  <Match DisplayType="SummaryAdmin">
+    <Place Fields_DateRange="Content"/>
+  </Match>
+
+</Placement>

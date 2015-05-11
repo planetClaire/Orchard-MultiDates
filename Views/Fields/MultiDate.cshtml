@@ -1,0 +1,12 @@
+﻿@using MultiDates.Fields
+@{
+    var field = (MultiDateField)Model.Field;
+}
+@if (field.Dates.Any()) {
+    <p>
+        Dates:<br/>
+        @foreach (var t in field.Dates) {
+            @t.ToLongDateString()<br/>
+        }
+    </p>
+}

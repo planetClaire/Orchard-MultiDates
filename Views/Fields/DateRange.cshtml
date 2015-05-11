@@ -1,0 +1,10 @@
+﻿@using MultiDates.Fields
+@{
+    var field = (DateRangeField)Model.Field;
+}
+@if (field.FromDate != default(DateTime)) {
+    <p>
+        From date: @field.FromDate.ToLongDateString()<br/>
+        To date: @field.ToDate.ToLongDateString()
+    </p>
+}

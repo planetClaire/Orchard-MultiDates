@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MultiDates.Fields;
+using MultiDates.Services;
 using MultiDates.Settings;
 using MultiDates.ViewModels;
 using Orchard;
@@ -8,18 +8,19 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
 namespace MultiDates.Drivers
 {
     public class DateRangeFieldDriver: ContentFieldDriver<DateRangeField> {
+        private readonly IMultiDateService _multiDateService;
         private const string TemplateName = "Fields/DateRange.Edit";
 
-        public DateRangeFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices)
+        public DateRangeFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices, IMultiDateService multiDateService)
         {
             Services = services;
             DateLocalizationServices = dateLocalizationServices;
+            _multiDateService = multiDateService;
             T = NullLocalizer.Instance;
         }
 
@@ -39,11 +40,7 @@ namespace MultiDates.Drivers
         {
             return ContentShape("Fields_DateRange", 
                 GetDifferentiator(field, part),
-                () => {
-                    ParseDates(field, field.Value);
-                    return shapeHelper.Fields_DateRange(Field: field);
-                }
-            );
+                () => shapeHelper.Fields_DateRange(Field: field));
         }
 
         protected override DriverResult Editor(ContentPart part, DateRangeField field, dynamic shapeHelper)
@@ -54,7 +51,7 @@ namespace MultiDates.Drivers
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
-                Dates = field.Value
+                DatesString = field.Value
             };
 
             return ContentShape("Fields_DateRange_Edit", GetDifferentiator(field, part),
@@ -69,13 +66,13 @@ namespace MultiDates.Drivers
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<MultiDateFieldSettings>();
 
-                if (settings.Required && !viewModel.Dates.Any()) {
+                if (settings.Required && !viewModel.DatesString.Any()) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 }
                 else {
                     try {
-                        ParseDates(field, viewModel.Dates);
-                        field.Value = viewModel.Dates;
+                        _multiDateService.ParseDateRange(viewModel.DatesString);
+                        field.Value = viewModel.DatesString;
                     }
                     catch {
                         updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date.", field.DisplayName));
@@ -84,13 +81,6 @@ namespace MultiDates.Drivers
             }
 
             return Editor(part, field, shapeHelper);
-        }
-
-        private void ParseDates(DateRangeField field, string dates) {
-            var options = new DateLocalizationOptions {EnableTimeZoneConversion = false};
-            var dateStrings = dates.Split(new []{" - "}, StringSplitOptions.RemoveEmptyEntries);
-            field.FromDate = DateLocalizationServices.ConvertFromLocalizedString(dateStrings[0], "00:00:00 AM", options).GetValueOrDefault();
-            field.ToDate = DateLocalizationServices.ConvertFromLocalizedString(dateStrings[1], "00:00:00 AM", options).GetValueOrDefault();
         }
 
         protected override void Importing(ContentPart part, DateRangeField field, ImportContentContext context)

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MultiDates.Fields;
+using MultiDates.Services;
 using MultiDates.Settings;
 using MultiDates.ViewModels;
 using Orchard;
@@ -8,18 +8,19 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Localization;
-using Orchard.Localization.Models;
 using Orchard.Localization.Services;
 
 namespace MultiDates.Drivers
 {
     public class MultiDateFieldDriver: ContentFieldDriver<MultiDateField> {
+        private readonly IMultiDateService _multiDateService;
         private const string TemplateName = "Fields/MultiDate.Edit"; 
 
-        public MultiDateFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices)
+        public MultiDateFieldDriver(IOrchardServices services, IDateLocalizationServices dateLocalizationServices, IMultiDateService multiDateService)
         {
             Services = services;
             DateLocalizationServices = dateLocalizationServices;
+            _multiDateService = multiDateService;
             T = NullLocalizer.Instance;
         }
 
@@ -38,11 +39,7 @@ namespace MultiDates.Drivers
         protected override DriverResult Display(ContentPart part, MultiDateField field, string displayType, dynamic shapeHelper) {
             return ContentShape("Fields_MultiDate", 
                 GetDifferentiator(field, part),
-                () => {
-                    ParseDates(field, field.Value);
-                    return shapeHelper.Fields_MultiDate(Field: field);
-                }
-            );
+                () => shapeHelper.Fields_MultiDate(Field: field));
         }
 
         protected override DriverResult Editor(ContentPart part, MultiDateField field, dynamic shapeHelper) {
@@ -52,7 +49,7 @@ namespace MultiDates.Drivers
                 Name = field.DisplayName,
                 Hint = settings.Hint,
                 IsRequired = settings.Required,
-                Dates = field.Value
+                DatesString = field.Value
             };
 
             return ContentShape("Fields_MultiDate_Edit", GetDifferentiator(field, part),
@@ -67,13 +64,13 @@ namespace MultiDates.Drivers
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<MultiDateFieldSettings>();
 
-                if (settings.Required && !viewModel.Dates.Any()) {
+                if (settings.Required && !viewModel.DatesString.Any()) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 }
                 else {
                     try {
-                        ParseDates(field, viewModel.Dates);
-                        field.Value = viewModel.Dates;
+                        _multiDateService.ParseMultiDates(viewModel.DatesString);
+                        field.Value = viewModel.DatesString;
                     }
                     catch {
                         updater.AddModelError(GetPrefix(field, part), T("{0} could not be parsed as a valid date.", field.DisplayName));
@@ -82,15 +79,6 @@ namespace MultiDates.Drivers
             }
 
             return Editor(part, field, shapeHelper);
-        }
-
-        private void ParseDates(MultiDateField field, string dates) {
-            var options = new DateLocalizationOptions {EnableTimeZoneConversion = false};
-            var dateStrings = dates.Split(',');
-            field.Dates = new DateTime[dateStrings.Length];
-            for (var i = 0; i < dateStrings.Length; i++) {
-                field.Dates[i] = DateLocalizationServices.ConvertFromLocalizedString(dateStrings[i], "00:00:00 AM", options).GetValueOrDefault();
-            }
         }
 
         protected override void Importing(ContentPart part, MultiDateField field, ImportContentContext context)
@@ -107,7 +95,7 @@ namespace MultiDates.Drivers
         {
             context
                 .Member(null, typeof(string), T("Value"), T("The date values of the field."))
-                .Enumerate<MultiDateField>(() => field => field.Dates);
+                .Enumerate<MultiDateField>(() => field => field.Value);
         }
     }
 }

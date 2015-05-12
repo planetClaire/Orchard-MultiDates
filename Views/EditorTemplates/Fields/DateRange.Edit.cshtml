@@ -8,13 +8,13 @@
     Script.Require("jQueryCalendars_Picker_Ext").AtFoot();
 }
 <fieldset>
-    <label for="@Html.FieldIdFor(m => Model.Dates)" @if (Model.IsRequired) { <text> class="required" </text>  }>@Model.Name</label>
+    <label for="@Html.FieldIdFor(m => Model.DatesString)" @if (Model.IsRequired) { <text> class="required" </text>  }>@Model.Name</label>
 
 
-    <label class="forpicker" for="@Html.FieldIdFor(m => Model.Dates)">@T("Dates")</label>
-    <span class="date">@Html.TextBoxFor(m => m.Dates, new { placeholder = T("Dates").Text, @class = "text medium" })</span>
+    <label class="forpicker" for="@Html.FieldIdFor(m => Model.DatesString)">@T("Dates")</label>
+    <span class="date">@Html.TextBoxFor(m => m.DatesString, new { placeholder = T("Dates").Text, @class = "text medium" })</span>
 
-    <text>@Html.ValidationMessageFor(m => m.Dates)</text>
+    <text>@Html.ValidationMessageFor(m => m.DatesString)</text>
 
     @using (Script.Foot())
     {
@@ -26,7 +26,7 @@
         //<![CDATA[
         $(function () {
 
-                $("#@Html.FieldIdFor(m => Model.Dates)").calendarsPicker({
+                $("#@Html.FieldIdFor(m => Model.DatesString)").calendarsPicker({
                     rangeSelect: true,
                     showAnim: "",
                     renderer: $.extend({}, $.calendarsPicker.themeRollerRenderer, {

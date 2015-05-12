@@ -12,7 +12,5 @@ namespace MultiDates.Fields
             set { Storage.Set(value ?? String.Empty); }
         }
 
-        public DateTime[] Dates { get; set; }
-
     }
 }

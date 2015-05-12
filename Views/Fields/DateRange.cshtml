@@ -1,10 +1,12 @@
 ﻿@using MultiDates.Fields
+@using MultiDates.Services
 @{
     var field = (DateRangeField)Model.Field;
+    var dateRange = WorkContext.Resolve<IMultiDateService>().ParseDateRange(field.Value);    
 }
-@if (field.FromDate != default(DateTime)) {
+@if (dateRange.Item1 != default(DateTime)) {
     <p>
-        From date: @field.FromDate.ToLongDateString()<br/>
-        To date: @field.ToDate.ToLongDateString()
+        From date: @dateRange.Item1.ToLongDateString()<br/>
+        To date: @dateRange.Item2.ToLongDateString()
     </p>
 }

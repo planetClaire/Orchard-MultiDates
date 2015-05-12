@@ -11,8 +11,5 @@ namespace MultiDates.Fields
             get { return Storage.Get<string>(); }
             set { Storage.Set(value ?? String.Empty); }
         }
-
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
     }
 }

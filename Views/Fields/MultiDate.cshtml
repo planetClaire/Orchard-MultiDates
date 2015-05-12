@@ -1,11 +1,13 @@
 ﻿@using MultiDates.Fields
+@using MultiDates.Services
 @{
     var field = (MultiDateField)Model.Field;
+    var dates = WorkContext.Resolve<IMultiDateService>().ParseMultiDates(field.Value);
 }
-@if (field.Dates.Any()) {
+@if (dates.Any()) {
     <p>
         Dates:<br/>
-        @foreach (var t in field.Dates) {
+        @foreach (var t in dates) {
             @t.ToLongDateString()<br/>
         }
     </p>

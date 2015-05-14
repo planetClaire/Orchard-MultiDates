@@ -67,7 +67,8 @@ namespace MultiDates.Drivers
                 if (settings.Required && !viewModel.DatesString.Any()) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 }
-                else {
+                else if (viewModel.DatesString.Any())
+                {
                     try {
                         _multiDateService.ParseMultiDates(viewModel.DatesString);
                         field.Value = viewModel.DatesString;

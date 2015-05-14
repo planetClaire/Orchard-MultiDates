@@ -4,7 +4,7 @@
     var field = (DateRangeField)Model.Field;
     var dateRange = WorkContext.Resolve<IMultiDateService>().ParseDateRange(field.Value);    
 }
-@if (dateRange.Item1 != default(DateTime)) {
+@if (dateRange != null && dateRange.Item1 != default(DateTime)) {
     <p>
         From date: @dateRange.Item1.ToLongDateString()<br/>
         To date: @dateRange.Item2.ToLongDateString()

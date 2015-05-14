@@ -4,7 +4,7 @@
     var field = (MultiDateField)Model.Field;
     var dates = WorkContext.Resolve<IMultiDateService>().ParseMultiDates(field.Value);
 }
-@if (dates.Any()) {
+@if (dates != null && dates.Any()) {
     <p>
         Dates:<br/>
         @foreach (var t in dates) {

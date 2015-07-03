@@ -91,13 +91,17 @@
     <Compile Include="Fields\DateRangeField.cs" />
     <Compile Include="Services\IMultiDateService.cs" />
     <Compile Include="Services\MultiDateService.cs" />
+    <Compile Include="Settings\DateRangeFieldEditorEvents.cs" />
+    <Compile Include="Settings\DateRangeFieldSettings.cs" />
     <Compile Include="ViewModels\DateRangeFieldViewModel.cs" />
     <Compile Include="ViewModels\MultiDateFieldViewModel.cs" />
     <Compile Include="Fields\MultiDateField.cs" />
     <Compile Include="Settings\MultiDateFieldEditorEvents.cs" />
     <Compile Include="Settings\MultiDateFieldSettings.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\DateRangeFieldSettings.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\EditorTemplates\Fields\MultiDate.Edit.cshtml" />
   </ItemGroup>

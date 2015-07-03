@@ -8,30 +8,30 @@ using Orchard.ContentManagement.ViewModels;
 
 namespace MultiDates.Settings
 {
-    public class MultiDateFieldEditorEvents : ContentDefinitionEditorEventsBase
+    public class DateRangeFieldEditorEvents : ContentDefinitionEditorEventsBase
     {
 
         public override IEnumerable<TemplateViewModel> PartFieldEditor(ContentPartFieldDefinition definition)
         {
-            if (definition.FieldDefinition.Name == "MultiDateField")
+            if (definition.FieldDefinition.Name == "DateRangeField")
             {
-                var model = definition.Settings.GetModel<MultiDateFieldSettings>();
+                var model = definition.Settings.GetModel<DateRangeFieldSettings>();
                 yield return DefinitionTemplate(model);
             }
         }
 
         public override IEnumerable<TemplateViewModel> PartFieldEditorUpdate(ContentPartFieldDefinitionBuilder builder, IUpdateModel updateModel)
         {
-            if (builder.FieldType != "MultiDateField")
+            if (builder.FieldType != "DateRangeField")
             {
                 yield break;
             }
 
-            var model = new MultiDateFieldSettings();
-            if (updateModel.TryUpdateModel(model, "MultiDateFieldSettings", null, null))
+            var model = new DateRangeFieldSettings();
+            if (updateModel.TryUpdateModel(model, "DateRangeFieldSettings", null, null))
             {
-                builder.WithSetting("MultiDateFieldSettings.Hint", model.Hint);
-                builder.WithSetting("MultiDateFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
+                builder.WithSetting("DateRangeFieldSettings.Hint", model.Hint);
+                builder.WithSetting("DateRangeFieldSettings.Required", model.Required.ToString(CultureInfo.InvariantCulture));
 
                 yield return DefinitionTemplate(model);
             }

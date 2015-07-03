@@ -64,11 +64,10 @@ namespace MultiDates.Drivers
 
                 var settings = field.PartFieldDefinition.Settings.GetModel<MultiDateFieldSettings>();
 
-                if (settings.Required && !viewModel.DatesString.Any()) {
+                if (settings.Required && string.IsNullOrEmpty(viewModel.DatesString)) {
                     updater.AddModelError(GetPrefix(field, part), T("{0} is required.", field.DisplayName));
                 }
-                else if (viewModel.DatesString.Any())
-                {
+                else {
                     try {
                         _multiDateService.ParseMultiDates(viewModel.DatesString);
                         field.Value = viewModel.DatesString;

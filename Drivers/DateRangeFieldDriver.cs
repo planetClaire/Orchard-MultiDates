@@ -45,7 +45,7 @@ namespace MultiDates.Drivers
 
         protected override DriverResult Editor(ContentPart part, DateRangeField field, dynamic shapeHelper)
         {
-            var settings = field.PartFieldDefinition.Settings.GetModel<MultiDateFieldSettings>();
+            var settings = field.PartFieldDefinition.Settings.GetModel<DateRangeFieldSettings>();
 
             var viewModel = new DateRangeFieldViewModel {
                 Name = field.DisplayName,
